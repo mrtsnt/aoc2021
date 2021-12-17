@@ -1,3 +1,6 @@
+#r "nuget: FSharp.Collections.ParallelSeq"
+open FSharp.Collections.ParallelSeq
+
 let xMin, xMax, yMin, yMax = 124, 174, -123, -86
 let inRange (x, y) = x <= xMax && y >= yMin
 let inTarget (x, y) = inRange (x, y) &&  x >= xMin && y <= yMax
@@ -14,15 +17,15 @@ let generateRange x x' y y' = Seq.collect(fun x -> [y..y'] |> Seq.map(fun y -> (
 
 let part1 () =
     generateRange 1 1000 1 1000
-    |> Seq.map (fun (xv, yv) ->
+    |> PSeq.map (fun (xv, yv) ->
         let allPoints = points xv yv |> Seq.takeWhile inRange |> Array.ofSeq
         if inTarget <| Array.last allPoints then Array.maxBy snd allPoints |> snd else 0)
-    |> Seq.max
+    |> PSeq.max
 
 let part2 () =
     generateRange 1 1000 -1000 1000
-    |> Seq.filter (fun (xv, yv) -> points xv yv |> Seq.takeWhile inRange |> Seq.last |> inTarget)
-    |> Seq.length
+    |> PSeq.filter (fun (xv, yv) -> points xv yv |> Seq.takeWhile inRange |> Seq.last |> inTarget)
+    |> PSeq.length
 
 part1 () |> printfn "%d"
 part2 () |> printfn "%d"
